@@ -5,6 +5,19 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Efeito de Header no Scroll
+    const header = document.querySelector('.main-header');
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+        
+        // Adiciona classe scrolled se passar de 50px
+        header.classList.toggle('scrolled', currentScrollY > 50);
+        
+        lastScrollY = currentScrollY;
+    }, { passive: true });
+
     // Configuração do Intersection Observer para as animações de "subir"
     const observerOptions = {
         root: null, // utiliza a viewport
@@ -33,8 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            alert('Mensagem enviada com sucesso! (Simulação)');
-            contactForm.reset();
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                alert('Mensagem enviada com sucesso! Entraremos em contato em breve.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                contactForm.reset();
+            }, 1500);
         });
     }
 });
